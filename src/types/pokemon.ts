@@ -11,15 +11,28 @@ export interface PokemonType {
   type: { name: string }
 }
 
-export interface PokemonDetails {
+export type PokemonDetails = {
+  id: number
   name: string
   height: number
   weight: number
   base_experience: number
-  types: PokemonType[]
   sprites: {
     other: {
-      "official-artwork": { front_default: string }
+      ["official-artwork"]: {
+        front_default: string
+      }
     }
   }
+  types: Array<{
+    type: { name: string }
+  }>
+  abilities: Array<{
+    ability: { name: string }
+  }>
+  stats: Array<{
+    base_stat: number
+    stat: { name: string }
+  }>
 }
+
