@@ -5,7 +5,6 @@ import type { PokemonListItem } from "@/types/pokemon"
 import { fetchPokemonDetails } from "@/api/pokemon"
 import { useEffect, useState } from "react"
 
-//This defines what the component expects.
 interface Props {
   pokemon: PokemonListItem
 }
@@ -20,8 +19,8 @@ export default function PokemonCard({ pokemon }: Props) {
     };
     loadPokemonImage();
   }, [pokemon.name]);
-  return (
-    //This creates a dynamic route.
+
+  return ( 
     <Link to={`/pokemon/${pokemon.name}`}>
       <Card className="hover:scale-105 transition-transform duration-300 shadow-lg cursor-pointer">
         <CardContent className="text-center p-4">
