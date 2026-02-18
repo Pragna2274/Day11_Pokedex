@@ -8,6 +8,19 @@ import type { PokemonListResponse, PokemonListItem } from "@/types/pokemon"
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("")
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("")
+
+  // ✅ Debounce Logic
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm)
+    }, 500) // 500ms delay
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [searchTerm])
+
   const {
     data,
     fetchNextPage,
@@ -16,7 +29,8 @@ export default function Home() {
     status,
   } = useInfiniteQuery<PokemonListResponse, Error>({
     queryKey: ["pokemons"],
-    queryFn: ({ pageParam = 0 }: QueryFunctionContext) => fetchPokemonPage({ pageParam: pageParam as number }),
+    queryFn: ({ pageParam = 0 }: QueryFunctionContext) =>
+      fetchPokemonPage({ pageParam: pageParam as number }),
     getNextPageParam: (lastPage, allPages) => {
       if (lastPage.results.length < 20) return undefined
       return allPages.length
@@ -25,29 +39,38 @@ export default function Home() {
   })
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
+
+  // ✅ Infinite Scroll Logic
   useEffect(() => {
     if (!loadMoreRef.current) return
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasNextPage) fetchNextPage()
+        if (entries[0].isIntersecting && hasNextPage) {
+          fetchNextPage()
+        }
       },
       { threshold: 1 }
     )
 
     observer.observe(loadMoreRef.current)
+
     return () => observer.disconnect()
   }, [fetchNextPage, hasNextPage])
 
-  const pokemons: PokemonListItem[] = data?.pages.flatMap(page => page.results) ?? []
+  const pokemons: PokemonListItem[] =
+    data?.pages.flatMap((page) => page.results) ?? []
 
-  const filteredPokemons = pokemons.filter(p =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // ✅ Use debounced value here
+  const filteredPokemons = pokemons.filter((p) =>
+    p.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
   )
 
   return (
     <div className="container mx-auto px-6 py-10">
-      <h1 className="text-4xl font-bold text-center mb-6">Pokémon Explorer ⚡</h1>
+      <h1 className="text-4xl font-bold text-center mb-6">
+        Pokémon Explorer ⚡
+      </h1>
 
       <SearchBar onSearch={setSearchTerm} />
 
@@ -59,21 +82,24 @@ export default function Home() {
         </div>
       )}
 
-      
       {status === "error" && (
-        <div className="text-center mt-20">Error loading Pokémon</div>
+        <div className="text-center mt-20">
+          Error loading Pokémon
+        </div>
       )}
 
       {status === "success" && (
         <>
           {filteredPokemons.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-              {filteredPokemons.map(pokemon => (
+              {filteredPokemons.map((pokemon) => (
                 <PokemonCard key={pokemon.name} pokemon={pokemon} />
               ))}
             </div>
           ) : (
-            <p className="text-center mt-10 text-gray-500">No Pokémon found.</p>
+            <p className="text-center mt-10 text-gray-500">
+              No Pokémon found.
+            </p>
           )}
         </>
       )}

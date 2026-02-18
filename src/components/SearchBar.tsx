@@ -6,12 +6,12 @@ interface SearchBarProps {
 }
 
 export default function SearchBar({ onSearch }: SearchBarProps) {
-  const [value, setValue] = useState("")
+  const [value, setValue] = useState("")//makes the input a controlled component.
 
  // This event comes from an HTML input element.
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setValue(e.target.value)
-    onSearch(e.target.value)
+    setValue(e.target.value)//updates local state
+    onSearch(e.target.value)//sends value to parent
   }
 
   return (
