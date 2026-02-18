@@ -8,6 +8,7 @@ interface SearchBarProps {
 export default function SearchBar({ onSearch }: SearchBarProps) {
   const [value, setValue] = useState("")
 
+ // This event comes from an HTML input element.
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
     onSearch(e.target.value)

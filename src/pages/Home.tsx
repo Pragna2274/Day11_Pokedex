@@ -8,7 +8,6 @@ import type { PokemonListResponse, PokemonListItem } from "@/types/pokemon"
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState("")
-
   const {
     data,
     fetchNextPage,
@@ -26,7 +25,6 @@ export default function Home() {
   })
 
   const loadMoreRef = useRef<HTMLDivElement | null>(null)
-
   useEffect(() => {
     if (!loadMoreRef.current) return
 
@@ -41,7 +39,6 @@ export default function Home() {
     return () => observer.disconnect()
   }, [fetchNextPage, hasNextPage])
 
- 
   const pokemons: PokemonListItem[] = data?.pages.flatMap(page => page.results) ?? []
 
   const filteredPokemons = pokemons.filter(p =>
