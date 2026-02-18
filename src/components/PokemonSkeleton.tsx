@@ -1,7 +1,9 @@
+//It’s shown while your Pokémon data is still loading from the API.
 import { Card, CardContent } from "@/components/ui/card"
 
 export default function PokemonSkeleton() {
   return (
+    //animate-pulse is what makes it look like a loading skeleton.
     <Card className="animate-pulse h-48 shadow-lg bg-white rounded-lg">
       <CardContent className="flex flex-col items-center justify-center p-4 h-full">
         <div className="h-24 w-24 bg-gray-300 rounded-full mb-4"></div>
